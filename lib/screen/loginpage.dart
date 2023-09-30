@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:budgettrack/registrationpage.dart';
+import 'package:budgettrack/screen/registrationpage.dart';
 import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
@@ -22,22 +22,22 @@ Future<List> getData() async
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final tMobileNo = TextEditingController();
-  final tPassword = TextEditingController();
+  final customerMobile = TextEditingController();
+  final password = TextEditingController();
 
   bool _valMobileNo = false;
   bool _valPassword = false;
 
   void dispose()
   {
-    tMobileNo.dispose();
-    tPassword.dispose();
+    customerMobile.dispose();
+    password.dispose();
   }
 
   void clearData()
   {
-    tMobileNo.clear();
-    tPassword.clear();
+    customerMobile.clear();
+    password.clear();
   }
 
 
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$')),
                   ],
-                  controller: tMobileNo,
+                  controller: customerMobile,
                 ),
 
                 const Padding(
@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                     prefixIcon: const Icon(Icons.password, color: Colors.red,),
                     errorText: _valPassword ? 'Please Enter Password' : null,
                   ),
-                  controller: tPassword,
+                  controller: password,
                 ),
                 const Padding(
                     padding: EdgeInsets.all(20.0)
@@ -97,8 +97,8 @@ class _LoginPageState extends State<LoginPage> {
 
                       onPressed: (){
                         setState(() {
-                          tMobileNo.text.isEmpty ? _valMobileNo = true : _valMobileNo = false;
-                          tPassword.text.isEmpty ? _valPassword = true : _valPassword = false;
+                          customerMobile.text.isEmpty ? _valMobileNo = true : _valMobileNo = false;
+                          password.text.isEmpty ? _valPassword = true : _valPassword = false;
                           if(_valMobileNo == false && _valPassword == false)
                           {
                             clearData();

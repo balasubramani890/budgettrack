@@ -1,4 +1,4 @@
-import 'package:budgettrack/loginpage.dart';
+import 'package:budgettrack/screen/loginpage.dart';
 import 'package:flutter/material.dart';
 
 void main()
@@ -13,38 +13,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       theme: ThemeData(
-          primaryColor: Colors.green,
-          appBarTheme: const AppBarTheme(
-            color: Colors.red,
-          ),
-
-          iconTheme: const IconThemeData(
-            color: Colors.red,
-          ),
-
-          inputDecorationTheme: const InputDecorationTheme(
-              labelStyle: TextStyle(
-                color: Colors.red,
-              ),
-
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    style: BorderStyle.solid,
-                    color: Colors.red,
-                  )
-              )
-          ),
-
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red,
-              )
-          )
-
+        primarySwatch: Colors.red
       ),
-
       home: LoginPage(),
     );
   }

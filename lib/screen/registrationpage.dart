@@ -1,25 +1,12 @@
+import 'package:budgettrack/controller/registrationController.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:budgettrack/loginpage.dart';
+import 'package:budgettrack/screen/loginpage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
-Future _saveDetails(String name, String mobileNo, String password) async
-{
-  var url = "http://192.168.63.202/API/saveData.php";
-  final response = await http.post(Uri.parse(url), body: {"name" : name, "mobileno" : mobileNo, "password" : password });
-  var result = response.body;
-  if(result == "true")
-  {
-    print("Success");
-    return true;
-  }
-  else
-  {
-    print("Error Result : " +result);
-    return false;
-  }
-}
+import '../model/registrationModel.dart';
+import '../service/registrationService.dart';
 
 class RegistrationPage extends StatefulWidget {
   RegistrationPage({Key? key}) : super(key: key);
@@ -29,79 +16,14 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  RegistrationController registrationController = RegistrationController();
+  RegistrationService registrationService = RegistrationService();
   final _formKey = GlobalKey<FormState>();
-  // RegistrationPage()
-  final tName = TextEditingController();
-  final tMobileNo = TextEditingController();
-  final tPassword = TextEditingController();
 
-  void dispose()
-  {
-    tName.dispose();
-    tMobileNo.dispose();
-    tPassword.dispose();
-  }
-
-  void clearData()
-  {
-    tName.clear();
-    tMobileNo.clear();
-    tPassword.clear();
-  }
-
-  Future showOkMessage(BuildContext context, String message) async
-  {
-    return showDialog(
-      context: context,
-
-      builder: (context)=> AlertDialog(
-        title: Text(message),
-
-        actions: <Widget>[
-          ElevatedButton(
-            child: const Text("OK"),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-          )
-
-        ],
-      ),
-    );
-  }
-
-  Future showYnMessage(BuildContext context, String message) async
-  {
-    return showDialog(
-      context: context,
-
-      builder: (context)=> AlertDialog(
-        title: Text(message),
-
-        actions: <Widget>[
-          ElevatedButton(
-            child: const Text("Ok"),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginPage()));
-            },
-          ),
-
-          ElevatedButton(
-            child: const Text("Cancel"),
-            onPressed: (){
-              Navigator.pop(context);
-            },
-          )
-
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         appBar: AppBar(
           title: const Text("Registration"),
         ),
@@ -130,7 +52,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       // inputFormatters: <TextInputFormatter>[
                       //   FilteringTextInputFormatter.allow(RegExp(r'^[a-z A-Z]+$')),
                       // ],
-                      controller: tName,
+                      controller: registrationController.nameController,
                       onChanged: (value){
                         _formKey.currentState?.validate();
                       },
@@ -143,7 +65,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         {
                           return 'Please Enter Valid Mobile Number';
                         }
-                        return null;
                       },
 
                     ),
@@ -160,7 +81,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         // errorText: _valMobileNo ? 'Please Enter Mobile Number' : null,
                       ),
                       keyboardType: TextInputType.phone,
-                      controller: tMobileNo,
+                      controller: registrationController.mobileController,
                       onChanged: (value){
                         _formKey.currentState?.validate();
                       },
@@ -184,7 +105,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         hintText: 'Enter Password',
                         prefixIcon: Icon(Icons.password, color: Colors.red,),
                       ),
-                      controller: tPassword,
+                      controller: registrationController.passwordController,
                       onChanged: (value){
                         _formKey.currentState?.validate();
                       },
@@ -208,17 +129,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           child: const Text('SUBMIT'),
 
                           onPressed: ()  async{
+                            print("Submit Button Clicked");
                             if(_formKey.currentState!.validate())
                             {
-                              final resultStatus = await _saveDetails(tName.text, tMobileNo.text, tPassword.text);
-                              if(resultStatus==true)
-                              {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginPage()));
-                              }
-                              else
-                              {
-                                showYnMessage(context, 'Mobile Number already Exists. Press Ok to Login or Cancel to Continue');
-                              }
+                              print("Validation");
+                              final registrationData = RegistrationModel(
+                                customerName: registrationController.nameController.text,
+                                customerMobile: registrationController.mobileController.text,
+                                password: registrationController.passwordController.text,
+                              );
+
+                              final result = await registrationService.registerUser(registrationData);
+
+                              print("Result : $result");
+
                             }
 
                           },
@@ -227,7 +151,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ElevatedButton(
                             child:  const Text('CLEAR'),
                             onPressed: (){
-                              clearData();
+
                             }
                         ),
 
