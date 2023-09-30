@@ -42,6 +42,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const Padding(
                         padding: EdgeInsets.all(10.0)
                     ),
+                    
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'User Name',
