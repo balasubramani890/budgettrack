@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:budgettrack/controller/loginController.dart';
+import 'package:budgettrack/screen/dashboard.dart';
 import 'package:budgettrack/service/loginService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:budgettrack/screen/registrationpage.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/loginModel.dart';
+import 'forgetPasswordPage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -67,10 +69,10 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.all(10.0)
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Password',
                     hintText: 'Enter Password',
-                    prefixIcon: const Icon(Icons.password, color: Colors.red,),
+                    prefixIcon: Icon(Icons.password, color: Colors.red,),
                   ),
                   controller: loginController.passwordController,
                   validator: (value) {
@@ -102,7 +104,26 @@ class _LoginPageState extends State<LoginPage> {
                             );
 
                             final result = await loginService.loginUser(loginData);
+                            print('Change page $result');
+
+                            if(result != null && int.tryParse(result) != null && int.parse(result) > 0)
+                              {
+                                Navigator.push(context,
+                                  MaterialPageRoute(
+                                      builder: (context)=>Dashboard()
+                                  ),
+                                );
+                              }
+                            else{
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('Please Login'),
+                              ));
+
+                            }
+
                             print("Result : $result");
+                            clearData();
+
                           }
                       }),
 
@@ -120,25 +141,53 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.all(10.0)
                 ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Don\'t have Account. '),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('Don\'t have Account. '),
 
-                    ElevatedButton(
+                      ElevatedButton(
                         child: const Text('Register'),
-                        onPressed: (){
-                          Navigator.push(context,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
                             MaterialPageRoute(
-                                builder: (context)=>RegistrationPage()
+                              builder: (context) => RegistrationPage(),
                             ),
                           );
-                        }
-                    )
+                          clearData();
+                        },
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(10.0),
+                      ),
+                    ],
+                  ),
+                ),
 
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('Forget Password? '),
 
-
-                  ],
+                      ElevatedButton(
+                        child: const Text('Forget Password'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ForgetPasswordPage(),
+                            ),
+                          );
+                          clearData();
+                        },
+                      ),
+                    ],
+                  ),
                 )
 
               ],
