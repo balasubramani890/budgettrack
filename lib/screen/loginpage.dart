@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'package:budgettrack/controller/loginController.dart';
+import 'package:budgettrack/service/loginService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:budgettrack/screen/registrationpage.dart';
 import 'package:http/http.dart' as http;
+
+import '../model/loginModel.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,33 +15,15 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-Future<List> getData() async
-{
-  print("RegistrationPage:getData(): Started");
-  var url = "http://192.168.63.202/API/getdata.php";
-  final response = await http.get(Uri.parse(url));
-  var dataReceived = json.decode(response.body);
-  // print(dataReceived);
-  return dataReceived;
-}
-
 class _LoginPageState extends State<LoginPage> {
-  final customerMobile = TextEditingController();
-  final password = TextEditingController();
-
-  bool _valMobileNo = false;
-  bool _valPassword = false;
-
-  void dispose()
-  {
-    customerMobile.dispose();
-    password.dispose();
-  }
+  final _formKey = GlobalKey<FormState>();
+  LoginController loginController = LoginController();
+  LoginService loginService = LoginService();
 
   void clearData()
   {
-    customerMobile.clear();
-    password.clear();
+    loginController.mobileController.clear();
+    loginController.passwordController.clear();
   }
 
 
@@ -58,31 +44,41 @@ class _LoginPageState extends State<LoginPage> {
                 const Padding(
                     padding: EdgeInsets.all(10.0)
                 ),
-                TextField(
+                TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Mobile Number',
                     hintText: 'Enter Mobile Number',
                     prefixIcon: const Icon(Icons.phone, color: Colors.red,),
-                    errorText: _valMobileNo ? 'Please Enter Mobile Number' : null,
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$')),
                   ],
-                  controller: customerMobile,
+                  controller: loginController.mobileController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter mobile number';
+                    }
+                    return null;
+                  },
                 ),
 
                 const Padding(
                     padding: EdgeInsets.all(10.0)
                 ),
-                TextField(
+                TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Password',
                     hintText: 'Enter Password',
                     prefixIcon: const Icon(Icons.password, color: Colors.red,),
-                    errorText: _valPassword ? 'Please Enter Password' : null,
                   ),
-                  controller: password,
+                  controller: loginController.passwordController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter password';
+                    }
+                    return null;
+                  },
                 ),
                 const Padding(
                     padding: EdgeInsets.all(20.0)
@@ -95,17 +91,20 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton(
                       child: Text('Login'),
 
-                      onPressed: (){
-                        setState(() {
-                          customerMobile.text.isEmpty ? _valMobileNo = true : _valMobileNo = false;
-                          password.text.isEmpty ? _valPassword = true : _valPassword = false;
-                          if(_valMobileNo == false && _valPassword == false)
-                          {
-                            clearData();
+                      onPressed: () async {
+                          print("Login Button Clicked");
+                          //if (_formKey.currentState!.validate()) {
+                          if(loginController.mobileController != null && loginController.passwordController != null){
+                            print("Validation");
+                            final loginData = LoginModel(
+                              customerMobile: loginController.mobileController.text,
+                              password: loginController.passwordController.text,
+                            );
+
+                            final result = await loginService.loginUser(loginData);
+                            print("Result : $result");
                           }
-                        });
-                      },
-                    ),
+                      }),
 
                     ElevatedButton(
                         child: Text('CLEAR'),
