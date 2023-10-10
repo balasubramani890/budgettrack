@@ -99,14 +99,14 @@ class _LoginPageState extends State<LoginPage> {
                           if(loginController.mobileController != null && loginController.passwordController != null){
                             print("Validation");
                             final loginData = LoginModel(
-                              customerMobile: loginController.mobileController.text,
+                              mobileNo: loginController.mobileController.text,
                               password: loginController.passwordController.text,
                             );
 
                             final result = await loginService.loginUser(loginData);
                             print('Change page $result');
 
-                            if(result != null && int.tryParse(result) != null && int.parse(result) > 0)
+                            if(result != null)
                               {
                                 Navigator.push(context,
                                   MaterialPageRoute(

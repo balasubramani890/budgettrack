@@ -5,7 +5,7 @@ import 'package:budgettrack/screen/loginpage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../model/registrationModel.dart';
+import '../model/SignUpRequestDTO.dart';
 import '../service/registrationService.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -133,9 +133,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             if(_formKey.currentState!.validate())
                             {
                               print("Validation");
-                              final registrationData = RegistrationModel(
-                                customerName: registrationController.nameController.text,
-                                customerMobile: registrationController.mobileController.text,
+                              final registrationData = SignUpRequestDTO(
+                                userName: registrationController.nameController.text,
+                                mobileNo: registrationController.mobileController.text,
                                 password: registrationController.passwordController.text,
                               );
 
