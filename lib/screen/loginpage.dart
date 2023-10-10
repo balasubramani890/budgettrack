@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                             );
 
                             final result = await loginService.loginUser(loginData);
-                            print('Change page $result');
+                            print('Login page Result got');
 
                             if(result != null)
                               {
@@ -118,10 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text('Please Login'),
                               ));
-
                             }
-
-                            print("Result : $result");
                             clearData();
 
                           }
