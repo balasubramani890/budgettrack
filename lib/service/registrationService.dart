@@ -1,19 +1,20 @@
 import 'dart:convert';
 
 
-import '../model/registrationModel.dart';
+import '../model/SignUpRequestDTO.dart';
 import 'package:http/http.dart' as http;
 
 class RegistrationService
 {
-  final String apiUrl = 'http://192.168.77.202:8080/api/registration/save';
-  RegistrationModel registrationModel = RegistrationModel(customerName: '', customerMobile: '', password: '');
+  final String apiUrl = 'http://192.168.77.202:8080/api/signup';
+  SignUpRequestDTO signUpRequestDTO = SignUpRequestDTO(userName: '', mobileNo: '', password: '');
 
-  Future<bool?> registerUser(RegistrationModel registrationModel) async {
+  Future<bool?> registerUser(SignUpRequestDTO signUpRequestDTO) async {
     print("registerUser Method Started");
     try{
+      String jsonBody = jsonEncode(signUpRequestDTO.toJson());
       final response = await http.post(Uri.parse(apiUrl), headers: <String, String>{"Content-Type" : "application/json"},
-          body: jsonEncode({"customerName" : registrationModel.customerName, "customerMobile" : registrationModel.customerMobile, "password" : registrationModel.password }));
+          body: jsonBody);
       if(response.statusCode == 200)
         {
           print('Connection Status : OK');
