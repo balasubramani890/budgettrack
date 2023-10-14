@@ -1,7 +1,7 @@
-import 'package:budgettrack/model/SignUpRequestDTO.dart';
+import 'package:budgettrack/model/signUpRequestDTO.dart';
 import 'package:flutter/material.dart';
 
-class RegistrationController
+class SignUpController
 {
 
   TextEditingController nameController = TextEditingController();
