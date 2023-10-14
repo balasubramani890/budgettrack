@@ -7,7 +7,7 @@ class ApiService {
 
   ApiService(this.baseUrl);
 
-  Future<Map<String, dynamic>> signUp(Map<String, dynamic> data) async {
+  /*Future<Map<String, dynamic>> signUp(Map<String, dynamic> data) async {
     final response = await http.post(
       Uri.parse('$baseUrl/signup'), // Replace with your signup endpoint
       headers: {'Content-Type': 'application/json'},
@@ -23,9 +23,9 @@ class ApiService {
       body: jsonEncode(data),
     );
     return _handleLoginResponse(response);
-  }
+  }*/
 
-  Future<Map<String, dynamic>> _handleSignUpResponse(http.Response response) async {
+ /* Future<Map<String, dynamic>> _handleSignUpResponse(http.Response response) async {
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       // Extract and set the access token during signup
@@ -51,7 +51,7 @@ class ApiService {
     } else {
       throw Exception('Failed to log in');
     }
-  }
+  }*/
 
   Future<Map<String, dynamic>> get(String endpoint) async {
     final response = await http.get(
@@ -74,7 +74,7 @@ class ApiService {
     Map<String, String> headers = {'Content-Type': 'application/json'};
     final accessToken = await _getAccessToken();
     if (accessToken != null) {
-      headers['Authorization'] = 'Bearer $accessToken';
+      headers['authorization'] = 'Bearer $accessToken';
     }
     return headers;
   }
@@ -85,9 +85,23 @@ class ApiService {
 
   Future<Map<String, dynamic>> _handleResponse(http.Response response) async {
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load data');
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      // Extract and set the access token during login
+      Map<String, dynamic> tokenCheckMap = jsonResponse['data'];
+        print("handle response started");
+        if (tokenCheckMap.containsKey('accessToken')) {
+          print('accesstoken apiservice');
+          await TokenManager().saveToken('access_token', tokenCheckMap['accessToken']);
+          return jsonResponse;
+        }
+       else {
+          return jsonResponse;
+        }
+    }
+    else {
+      print('Connection Error : $response.statusCode');
+      throw Exception('$response.statusCode');
     }
   }
+
 }

@@ -1,12 +1,12 @@
-import 'package:budgettrack/controller/registrationController.dart';
+import 'package:budgettrack/controller/signUpController.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:budgettrack/screen/loginpage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../model/SignUpRequestDTO.dart';
-import '../service/registrationService.dart';
+import '../model/signUpRequestDTO.dart';
+import '../service/signUpService.dart';
 
 class RegistrationPage extends StatefulWidget {
   RegistrationPage({Key? key}) : super(key: key);
@@ -16,8 +16,8 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  RegistrationController registrationController = RegistrationController();
-  RegistrationService registrationService = RegistrationService();
+  SignUpController signUpController = SignUpController();
+  SignUpService signUpService = SignUpService();
   final _formKey = GlobalKey<FormState>();
 
 
@@ -52,7 +52,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       // inputFormatters: <TextInputFormatter>[
                       //   FilteringTextInputFormatter.allow(RegExp(r'^[a-z A-Z]+$')),
                       // ],
-                      controller: registrationController.nameController,
+                      controller: signUpController.nameController,
                       onChanged: (value){
                         _formKey.currentState?.validate();
                       },
@@ -81,7 +81,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         // errorText: _valMobileNo ? 'Please Enter Mobile Number' : null,
                       ),
                       keyboardType: TextInputType.phone,
-                      controller: registrationController.mobileController,
+                      controller: signUpController.mobileController,
                       onChanged: (value){
                         _formKey.currentState?.validate();
                       },
@@ -105,7 +105,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         hintText: 'Enter Password',
                         prefixIcon: Icon(Icons.password, color: Colors.red,),
                       ),
-                      controller: registrationController.passwordController,
+                      controller: signUpController.passwordController,
                       onChanged: (value){
                         _formKey.currentState?.validate();
                       },
@@ -134,14 +134,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             {
                               print("Validation");
                               final registrationData = SignUpRequestDTO(
-                                userName: registrationController.nameController.text,
-                                mobileNo: registrationController.mobileController.text,
-                                password: registrationController.passwordController.text,
+                                userName: signUpController.nameController.text,
+                                mobileNo: signUpController.mobileController.text,
+                                password: signUpController.passwordController.text,
                               );
 
-                              final result = await registrationService.registerUser(registrationData);
+                              final result = await signUpService.registerUser(registrationData);
+                              print('Login page Result got $result');
 
-                              print("Result : $result");
+                              if(result != null && result == "Success")
+                              {
+                                Navigator.push(context,
+                                  MaterialPageRoute(
+                                      builder: (context)=>LoginPage()
+                                  ));
+                              }
+                              else{
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text('Mobile No Already Exists!')
+                                ));
+                              }
 
                             }
 

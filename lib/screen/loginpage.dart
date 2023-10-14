@@ -4,7 +4,7 @@ import 'package:budgettrack/screen/dashboard.dart';
 import 'package:budgettrack/service/loginService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:budgettrack/screen/registrationpage.dart';
+import 'package:budgettrack/screen/signUpPage.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/loginModel.dart';
@@ -104,9 +104,9 @@ class _LoginPageState extends State<LoginPage> {
                             );
 
                             final result = await loginService.loginUser(loginData);
-                            print('Login page Result got');
+                            print('Login page Result got $result');
 
-                            if(result != null)
+                            if(result != null && result == "Success")
                               {
                                 Navigator.push(context,
                                   MaterialPageRoute(

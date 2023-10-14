@@ -1,4 +1,4 @@
-import 'package:budgettrack/screen/registrationpage.dart';
+import 'package:budgettrack/screen/signUpPage.dart';
 import 'package:budgettrack/service/loginService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,18 +74,19 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       child: Text('Get Password'),
                       onPressed: () async {
                         if (loginController.mobileController != null) {
-                          String mobileNumber = loginController.mobileController.text;
+                          String mobileNo = loginController.mobileController.text;
                           try {
-                            String? password = await loginService.getForgottenPassword(mobileNumber);
+                            String? password = await loginService.forgottenPassword(mobileNo);
                             if (password != null) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text('Forgotten password: $password'),
+                                content: Text('Your password: $password'),
                               ));
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text('No password found for the given mobile number'),
+                                content: Text('Mobile number not available'),
                               ));
                             }
+                            clearData();
                           } catch (e) {
                             print('Error: $e');
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
