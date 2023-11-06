@@ -1,15 +1,16 @@
-import 'package:budgettrack/controller/signUpController.dart';
+import 'package:budgettrack/controller/signup_controller.dart';
+import 'package:budgettrack/screen/logout_button_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:budgettrack/screen/loginpage.dart';
+import 'package:budgettrack/screen/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../model/signUpRequestDTO.dart';
-import '../service/signUpService.dart';
+import '../model/signup_request_dto.dart';
+import '../service/signup_service.dart';
 
 class RegistrationPage extends StatefulWidget {
-  RegistrationPage({Key? key}) : super(key: key);
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -144,15 +145,63 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                               if(result != null && result == "Success")
                               {
-                                Navigator.push(context,
+                               /* Navigator.push(context,
                                   MaterialPageRoute(
                                       builder: (context)=>LoginPage()
-                                  ));
+                                  ));*/
+
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Registration Successful'),
+                                      content: Text('Welcome to your app!'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Close the dialog
+                                            // Navigate to the next screen or perform other actions
+                                            Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => LoginPage()
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               }
                               else{
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                               /* ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text('Mobile No Already Exists!')
-                                ));
+                                ));*/
+
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('User Already Exists'),
+                                      content: Text('Mobile No Already Exists!'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Close the dialog
+                                            // Navigate to the next screen or perform other actions
+                                            Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => LoginPage()
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               }
 
                             }

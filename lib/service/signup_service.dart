@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 
-import 'package:budgettrack/common/tokenManager.dart';
+import 'package:budgettrack/common/token_manager.dart';
 
-import '../common/apiService.dart';
-import '../model/signUpRequestDTO.dart';
+import '../common/api_service.dart';
+import '../model/signup_request_dto.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpService
@@ -13,8 +13,9 @@ class SignUpService
   SignUpRequestDTO signUpRequestDTO = SignUpRequestDTO(userName: '', mobileNo: '', password: '');
 
   Future<String?> registerUser(SignUpRequestDTO signUpRequestDTO) async {
-    final String apiUrl = 'http://192.168.77.202:8080/api';
-    ApiService apiService = ApiService(apiUrl);
+    // final String apiUrl = 'http://192.168.77.202:8080/api';
+    // ApiService apiService = ApiService(apiUrl);
+    ApiService apiService = ApiService();
     print("registerUser Method Started");
     try{
       final registerResponse= await apiService.post("signup",signUpRequestDTO.toJson());

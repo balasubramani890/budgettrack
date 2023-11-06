@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'tokenManager.dart';
+import 'token_manager.dart';
 
 class ApiService {
-  final String baseUrl;
+  // final String baseUrl ='http://192.168.77.202:8080/api';
+  final String baseUrl ='http://192.168.162.202:8080/api';
 
-  ApiService(this.baseUrl);
+  // ApiService(this.baseUrl);
 
   /*Future<Map<String, dynamic>> signUp(Map<String, dynamic> data) async {
     final response = await http.post(
@@ -67,6 +68,7 @@ class ApiService {
       headers: await _buildHeaders(),
       body: jsonEncode(body),
     );
+
     return _handleResponse(response);
   }
 
@@ -74,7 +76,8 @@ class ApiService {
     Map<String, String> headers = {'Content-Type': 'application/json'};
     final accessToken = await _getAccessToken();
     if (accessToken != null) {
-      headers['authorization'] = 'Bearer $accessToken';
+      // print("Access Token : $accessToken");
+      headers['authorization'] = '$accessToken';
     }
     return headers;
   }
@@ -103,5 +106,27 @@ class ApiService {
       throw Exception('$response.statusCode');
     }
   }
+
+  Future<void> logout() async {
+    print("Logout Method");
+    try {
+      final deleteToken = await TokenManager().getToken('access_token');
+      if (deleteToken != null && deleteToken.isNotEmpty) {
+        await TokenManager().deleteToken(deleteToken as String);
+        print("Token Cleared");
+      }
+      else {
+        print("Token is null or empty. Not cleared.");
+        // Handle the case where the token is null or empty if necessary
+      }
+    }
+    catch(e)
+    {
+      print("Error during logout: $e");
+    }
+
+    }
+
+
 
 }

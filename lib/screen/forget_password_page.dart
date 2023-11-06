@@ -1,11 +1,11 @@
-import 'package:budgettrack/screen/signUpPage.dart';
-import 'package:budgettrack/service/loginService.dart';
+import 'package:budgettrack/screen/signup_page.dart';
+import 'package:budgettrack/service/login_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../controller/loginController.dart';
-import '../model/loginModel.dart';
-import 'loginpage.dart';
+import '../controller/login_controller.dart';
+import '../model/login_model.dart';
+import 'login_page.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({Key? key}) : super(key: key);
